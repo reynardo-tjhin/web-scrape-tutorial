@@ -1,2 +1,3 @@
-# web-scrape-tutorial
+# Web Scrape Tutorial
+
 Learning About Web Scraping
