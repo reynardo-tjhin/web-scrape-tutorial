@@ -38,12 +38,13 @@ def test_use_api():
 
 
 def test_use_script():
+
     # get url
-    url = "https://seek.com.au"
+    url = "https://seek.com.au/"
     search_query = "software" + "-jobs"
     location_query = "in-" + "All-Sydney-NSW"
-    page = "page=" + "2"
-    url += "/" + search_query + "/" + location_query + "?" + page
+    page = "page=" + "1"
+    url += search_query + "/" + location_query + "?" + page
 
     # get response
     response = requests.get(url)
@@ -56,14 +57,10 @@ def test_use_script():
     script_content = script_tag.string
 
     # Define regular expressions to extract JSON-like data
-    # seek_config_pattern = re.search(r'window\.SEEK_CONFIG\s*=\s*({.*?});', script_content, re.DOTALL)
     seek_redux_pattern = re.search(r'window\.SEEK_REDUX_DATA\s*=\s*({.*?});', script_content, re.DOTALL)
-    # seek_app_config_pattern = re.search(r'window\.SEEK_APP_CONFIG\s*=\s*({.*?});', script_content, re.DOTALL)
 
     # Extract and clean the JSON-like strings
-    # seek_config = seek_config_pattern.group(1) if seek_config_pattern else None
     seek_redux_data = seek_redux_pattern.group(1) if seek_redux_pattern else None
-    # seek_app_config = seek_app_config_pattern.group(1) if seek_app_config_pattern else None
 
     # Function to safely load JSON data
     def parse_json(data_str):
@@ -74,9 +71,7 @@ def test_use_script():
             return None
 
     # Convert to Python dictionaries
-    # seek_config_data = parse_json(seek_config) if seek_config else None
     seek_redux_data_data = parse_json(seek_redux_data) if seek_redux_data else None
-    # seek_app_config_data = parse_json(seek_app_config) if seek_app_config else None
 
     # Output the data
     print("Total Jobs Found: ", end="")
@@ -89,7 +84,9 @@ def test_use_script():
     print(len(seek_redux_data_data['results']['results']['jobs']))
 
     print("Job 1:")
-    print(seek_redux_data_data['results']['results']['jobs'][0])
+    job = seek_redux_data_data['results']['results']['jobs'][0]
+    for key in job.keys():
+        print(key, job[key])
 
 
 if (__name__ == "__main__"):
